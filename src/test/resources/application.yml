@@ -1,0 +1,8 @@
+feign:
+  hystrix:
+    enabled: false
+
+logging:
+  level:
+    com.som.incomestatement.client: DEBUG
+    org.springframework.cloud.netflix.feign.valid: DEBUG

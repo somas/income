@@ -1,0 +1,14 @@
+feign:
+  hystrix:
+    enabled: false
+
+logging:
+  level:
+    com:
+      som:
+        incomestatement:
+          client:
+            TransactionsApi: DEBUG
+
+capitalone:
+  url: https://2016.api.levelmoney.com/api/v2/core/
