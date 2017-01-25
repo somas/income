@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class TransactionSummary {
 
     private BigDecimal income = BigDecimal.ZERO.movePointLeft(2);
     private BigDecimal expense = BigDecimal.ZERO.movePointLeft(2);
-    private Map<Long, List<LocalDateTime>> transactionsMap = new ConcurrentHashMap<>();
+    private Map<Long, List<ZonedDateTime>> transactionsMap = new ConcurrentHashMap<>();
     private List<Payments> paymentDetailsList = new ArrayList<>();
 
     public void addExpense(Long expense) {

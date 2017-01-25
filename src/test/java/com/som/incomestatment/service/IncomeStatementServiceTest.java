@@ -2,7 +2,7 @@ package com.som.incomestatment.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,8 +33,8 @@ public class IncomeStatementServiceTest {
     }
 
     @Test public void getDailyTransactionSummaryMap_happyPath() throws Exception {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        LocalDateTime currentMonth = LocalDateTime.now();
+        ZonedDateTime lastMonth = ZonedDateTime.now().minusMonths(1);
+        ZonedDateTime currentMonth = ZonedDateTime.now();
         Transactions transactions = buildTransactions(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
@@ -48,8 +48,8 @@ public class IncomeStatementServiceTest {
     }
 
     @Test public void getDailyTransactionSummaryMap_withFilter() throws Exception {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        LocalDateTime currentMonth = LocalDateTime.now();
+        ZonedDateTime lastMonth = ZonedDateTime.now().minusMonths(1);
+        ZonedDateTime currentMonth = ZonedDateTime.now();
         Transactions transactions = buildTransactions(lastMonth, currentMonth, "Krispy Kreme Donuts");
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
@@ -63,8 +63,8 @@ public class IncomeStatementServiceTest {
     }
 
     @Test public void getDailyTransactionSummaryMap_withPaymentTransaction() throws Exception {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        LocalDateTime currentMonth = LocalDateTime.now();
+        ZonedDateTime lastMonth = ZonedDateTime.now().minusMonths(1);
+        ZonedDateTime currentMonth = ZonedDateTime.now();
         Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
@@ -78,21 +78,21 @@ public class IncomeStatementServiceTest {
     }
 
     @Test public void getDailyTransactionSummaryMap_withPaymentSwitch() throws Exception {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        LocalDateTime currentMonth = LocalDateTime.now();
+        ZonedDateTime lastMonth = ZonedDateTime.now().minusMonths(1);
+        ZonedDateTime currentMonth = ZonedDateTime.now();
         Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
             .getDailyTransactionSummaryMap(null, transactions, true);
 
-        Assert.assertEquals(BigDecimal.valueOf(-500).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getExpense());
+        Assert.assertEquals(BigDecimal.valueOf(-2550).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getExpense());
         Assert.assertEquals(BigDecimal.valueOf(1000).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getIncome());
 
         Assert.assertEquals(BigDecimal.valueOf(0).movePointLeft(2), balanceSheet.get(currentMonth.toLocalDate()).getExpense());
-        Assert.assertEquals(BigDecimal.valueOf(2100).movePointLeft(2), balanceSheet.get(currentMonth.toLocalDate()).getIncome());
+        Assert.assertEquals(BigDecimal.valueOf(3100).movePointLeft(2), balanceSheet.get(currentMonth.toLocalDate()).getIncome());
     }
 
-    private Transactions buildTransactions(LocalDateTime lastMonth, LocalDateTime currentMonth, String merchantId) {
+    private Transactions buildTransactions(ZonedDateTime lastMonth, ZonedDateTime currentMonth, String merchantId) {
         Transaction transaction = Transaction.builder().transactionId("1").transactionTime(lastMonth).amount(1000L).build();
         Transaction transaction2 = Transaction.builder().transactionId("2").transactionTime(lastMonth).amount(-500L).merchant(merchantId).build();
         Transaction transaction3 = Transaction.builder().transactionId("3").transactionTime(lastMonth).amount(-2050L).build();
@@ -104,7 +104,7 @@ public class IncomeStatementServiceTest {
         return transactions;
     }
 
-    private Transactions buildTransactionsWithPayments(LocalDateTime lastMonth, LocalDateTime currentMonth, String merchantId) {
+    private Transactions buildTransactionsWithPayments(ZonedDateTime lastMonth, ZonedDateTime currentMonth, String merchantId) {
         Transaction transaction = Transaction.builder().transactionId("1").transactionTime(lastMonth).amount(1000L).build();
         Transaction transaction2 = Transaction.builder().transactionId("2").transactionTime(lastMonth).amount(-500L).merchant(merchantId).build();
         Transaction transaction3 = Transaction.builder().transactionId("3").transactionTime(lastMonth).amount(-2050L).build();
@@ -132,8 +132,8 @@ public class IncomeStatementServiceTest {
     }
 
     @Test public void getMonthlyTransactionSummaryMap_happyPath() throws Exception {
-        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
-        LocalDateTime currentMonth = LocalDateTime.now();
+        ZonedDateTime lastMonth = ZonedDateTime.now().minusMonths(1);
+        ZonedDateTime currentMonth = ZonedDateTime.now();
         Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService.getDailyTransactionSummaryMap(null, transactions, false);

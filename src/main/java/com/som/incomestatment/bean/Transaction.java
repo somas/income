@@ -1,7 +1,7 @@
 package com.som.incomestatment.bean;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import lombok.AllArgsConstructor;
@@ -19,11 +19,7 @@ public class Transaction {
     private Long amount;
     private String transactionId;
     private String merchant;
-    private LocalDateTime transactionTime;
-
-    public String getTransactionTimeAsString() {
-        return this.transactionTime.format(YYYY_MM_FORMATTER);
-    }
+    private ZonedDateTime transactionTime;
 
     public LocalDate getTransactionTimeAsLocalDate() {
         return this.transactionTime.toLocalDate();

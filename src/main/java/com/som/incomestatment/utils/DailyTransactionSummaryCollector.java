@@ -8,6 +8,7 @@ import com.som.incomestatment.bean.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,15 +51,15 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
     private boolean isPaymentTransaction(Map<LocalDate, TransactionSummary> map, Transaction transaction) {
         TransactionSummary transactionSummary = map.get(transaction.getTransactionTimeAsLocalDate());
         TransactionSummary dayMinus1TransactionSummary = map.get(transaction.getTransactionTimeAsLocalDate().minusDays(1));
-        Map<Long, List<LocalDateTime>> transactionMap = transactionSummary.getTransactionsMap();
-        Map<Long, List<LocalDateTime>> dayMinus1TransactionMap = dayMinus1TransactionSummary != null? dayMinus1TransactionSummary.getTransactionsMap() : null;
+        Map<Long, List<ZonedDateTime>> transactionMap = transactionSummary.getTransactionsMap();
+        Map<Long, List<ZonedDateTime>> dayMinus1TransactionMap = dayMinus1TransactionSummary != null? dayMinus1TransactionSummary.getTransactionsMap() : null;
 
         return filterAndUpdatePaymentTransaction(transaction, transactionMap, transactionSummary) ||
             filterAndUpdatePaymentTransaction(transaction, dayMinus1TransactionMap, dayMinus1TransactionSummary);
     }
 
     private boolean filterAndUpdatePaymentTransaction(Transaction transaction,
-        Map<Long, List<LocalDateTime>> transactionMap, TransactionSummary transactionSummary) {
+        Map<Long, List<ZonedDateTime>> transactionMap, TransactionSummary transactionSummary) {
         if(transactionMap == null) {
             return false;
         }
@@ -67,7 +68,7 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
             updateTransactionMap(transaction, transactionMap);
             return false;
         } else {
-            Optional<LocalDateTime> transTime = transactionMap.get(transaction.getAmount() * -1).stream().filter(localDateTime -> ChronoUnit.HOURS.between(localDateTime, transaction.getTransactionTime()) <= 24).findFirst();
+            Optional<ZonedDateTime> transTime = transactionMap.get(transaction.getAmount() * -1).stream().filter(localDateTime -> ChronoUnit.HOURS.between(localDateTime, transaction.getTransactionTime()) <= 24).findFirst();
 
             if(!transTime.isPresent()) {
                 updateTransactionMap(transaction, transactionMap);
@@ -78,8 +79,8 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
         }
     }
 
-    private void adjustForPaymentTransaction(Transaction transaction, Map<Long, List<LocalDateTime>> transactionMap,
-        TransactionSummary transactionSummary, Optional<LocalDateTime> transTime) {
+    private void adjustForPaymentTransaction(Transaction transaction, Map<Long, List<ZonedDateTime>> transactionMap,
+        TransactionSummary transactionSummary, Optional<ZonedDateTime> transTime) {
         Payments payments = null;
         if(transaction.getAmount() < 0) {
             transactionSummary.removeIncome(transaction.getAmount());
@@ -93,9 +94,9 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
         transactionSummary.getPaymentDetailsList().add(payments);
     }
 
-    private void updateTransactionMap(Transaction transaction, Map<Long, List<LocalDateTime>> transactionMap) {
+    private void updateTransactionMap(Transaction transaction, Map<Long, List<ZonedDateTime>> transactionMap) {
         if(transactionMap.get(transaction.getAmount()) == null) {
-            List<LocalDateTime> tempList = new ArrayList<>();
+            List<ZonedDateTime> tempList = new ArrayList<>();
             tempList.add(transaction.getTransactionTime());
             transactionMap.put(transaction.getAmount(), tempList);
         } else {
