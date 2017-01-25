@@ -1,9 +1,7 @@
 package com.som.incomestatment.controller;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.som.incomestatment.bean.TransactionSummary;
+import com.som.incomestatment.service.IncomeStatementService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.som.incomestatment.bean.TransactionSummary;
-import com.som.incomestatment.service.IncomeStatementService;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IncomeStatementControllerTest {
 
@@ -33,13 +31,13 @@ public class IncomeStatementControllerTest {
         requestBody.put(IncomeStatementController.TOKEN, "12345");
         requestBody.put(IncomeStatementController.API_TOKEN, "ABCDE");
 
-        Mockito.when(mockIncomeStatementService.getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection(), Mockito.anyBoolean()))
+        Mockito.when(mockIncomeStatementService.getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
             .thenReturn(Mockito.mock(Map.class));
 
         Map<String, TransactionSummary> response = incomeStatementController.getStatement("123", requestBody);
 
         Assert.assertNotNull(response);
-        Mockito.verify(mockIncomeStatementService, Mockito.times(1)).getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection(), Mockito.anyBoolean());
+        Mockito.verify(mockIncomeStatementService, Mockito.times(1)).getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean());
     }
 
     @Test(expected = RuntimeException.class) public void getStatement_badUid() throws Exception {

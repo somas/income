@@ -15,5 +15,5 @@ capitalone:
 
 filter:
   transaction:
-    ignore-donuts: Krispy Kreme Donuts,DUNKIN ##336784
+    ignore-donuts: "Krispy Kreme Donuts,DUNKIN #336784"
 

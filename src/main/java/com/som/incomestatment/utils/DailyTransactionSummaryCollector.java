@@ -1,13 +1,12 @@
 package com.som.incomestatment.utils;
 
 
-import com.som.incomestatment.bean.TransactionSummary;
 import com.som.incomestatment.bean.Payments;
 import com.som.incomestatment.bean.Transaction;
+import com.som.incomestatment.bean.TransactionSummary;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -38,7 +37,7 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
                 transactionSummary = new TransactionSummary();
                 map.put(transaction.getTransactionTimeAsLocalDate(), transactionSummary);
             }
-            if(isIgnorePayments || !isPaymentTransaction(map, transaction)) {
+            if(!isIgnorePayments || !isPaymentTransaction(map, transaction)) {
                 if(transaction.getAmount() < 0) {
                     transactionSummary.addExpense(transaction.getAmount());
                 } else {
@@ -85,13 +84,18 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
         if(transaction.getAmount() < 0) {
             transactionSummary.removeIncome(transaction.getAmount());
             payments = Payments.builder().datePaid(transTime.get()).paymentAmount(
-                BigDecimal.valueOf(transaction.getAmount() * -1).movePointLeft(2)).build();
+                BigDecimal.valueOf(transaction.getAmount() * -1).movePointLeft(2))
+                    .merchant(transaction.getMerchant())
+                    .transactionId(transaction.getTransactionId()).build();
         } else {
             transactionSummary.removeExpense(transaction.getAmount());
-            payments = Payments.builder().datePaid(transaction.getTransactionTime()).paymentAmount(BigDecimal.valueOf(transaction.getAmount()).movePointLeft(2)).build();
+            payments = Payments.builder().datePaid(transaction.getTransactionTime())
+                    .paymentAmount(BigDecimal.valueOf(transaction.getAmount()).movePointLeft(2))
+                    .merchant(transaction.getMerchant())
+                    .transactionId(transaction.getTransactionId()).build();
         }
         transactionMap.get(transaction.getAmount() * -1).remove(transTime.get());
-        transactionSummary.getPaymentDetailsList().add(payments);
+        transactionSummary.getPaymentDetails().add(payments);
     }
 
     private void updateTransactionMap(Transaction transaction, Map<Long, List<ZonedDateTime>> transactionMap) {

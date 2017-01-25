@@ -3,7 +3,6 @@ package com.som.incomestatment.bean;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class TransactionSummary {
     private BigDecimal income = BigDecimal.ZERO.movePointLeft(2);
     private BigDecimal expense = BigDecimal.ZERO.movePointLeft(2);
     private Map<Long, List<ZonedDateTime>> transactionsMap = new ConcurrentHashMap<>();
-    private List<Payments> paymentDetailsList = new ArrayList<>();
+    private List<Payments> paymentDetails = new ArrayList<>();
 
     public void addExpense(Long expense) {
         this.expense = this.expense.add(getBigDecimalFromLong(expense));
@@ -43,12 +42,12 @@ public class TransactionSummary {
     }
 
     public void merge(TransactionSummary transactionSummary) {
-        merge(transactionSummary, false);
+        merge(transactionSummary, true);
     }
 
     public void merge(TransactionSummary transactionSummary, boolean isIncludePaymentDetails) {
         this.income = this.income.add(transactionSummary.getIncome());
         this.expense = this.expense.add(transactionSummary.getExpense());
-        if(isIncludePaymentDetails) this.paymentDetailsList.addAll(transactionSummary.getPaymentDetailsList());
+        if(isIncludePaymentDetails) this.paymentDetails.addAll(transactionSummary.getPaymentDetails());
     }
 }

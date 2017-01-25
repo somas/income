@@ -1,16 +1,12 @@
 package com.som.incomestatment.controller;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.som.incomestatment.bean.TransactionSummary;
+import com.som.incomestatment.service.IncomeStatementService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.som.incomestatment.bean.TransactionSummary;
-import com.som.incomestatment.service.IncomeStatementService;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/income")
@@ -31,9 +27,8 @@ public class IncomeStatementController {
             getFilterKeys(requestBody), getIgnorePaymentsOption(requestBody));
     }
 
-    private List<String> getFilterKeys(@RequestBody Map<String, String> requestBody) {
-        String filterKey = requestBody.get(FILTER_KEY);
-        return StringUtils.isNotBlank(filterKey)? Arrays.asList(requestBody.get(FILTER_KEY)) : null;
+    private String getFilterKeys(@RequestBody Map<String, String> requestBody) {
+        return requestBody.get(FILTER_KEY);
     }
 
     private Boolean getIgnorePaymentsOption(@RequestBody Map<String, String> requestBody) {
@@ -44,7 +39,7 @@ public class IncomeStatementController {
                 throw new RuntimeException("Expected boolean value for ignore-cc-paymenst");
             }
         }
-        return false;
+        return true;
     }
 
     private void validate(Map<String, String> requestBody, String uid) {
