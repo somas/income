@@ -9,6 +9,62 @@ Application that displays users monthly income and expenses, along with averages
 
 * Configurable option to detect Credit Card payments and not include them in expense/income
 
+## Endpoint
+
+POST /{user_id}/statement
+
+### Parameters
+
+| parameter          | required | type    |
+|--------------------|----------|---------|
+| token              | true     | String  |
+| api-token          | true     | String  |
+| filter             | false    | String  |
+| ignore-cc-payments | false    | boolean |
+
+### Response Parameters
+
+| parameter      | type       | complex object  |
+|----------------|------------|-----------------|
+| income         | BigDecimal |                 |
+| expense        | BigDecimal |                 |
+| payment_amount | BigDecimal | payment_details |
+| transaction_id | String     | payment_details |
+| merchant       | String     | payment_details |
+| date_paid      | Timestamp  | payment_details |
+
+
+### Example Response
+
+```
+{
+  "2016-01": {
+    "income": 224289,
+    "expense": -282781
+  },
+  "2015-11": {
+    "income": 345833,
+    "expense": -263459,
+    "payment_details": [
+      {
+        "date_paid": "2015-11-03T00:00:00Z",
+        "payment_amount": 51945,
+        "transaction_id": "1446733980000",
+        "merchant": "Credit Card Payment"
+      }
+    ]
+  },
+  "average": {
+    "income": 307405.14,
+    "expense": -313821.64
+  },
+  "2015-10": {
+    "income": 171743,
+    "expense": -330184
+  }
+ }
+ ```
+
 ## Walkthrough
 
 ### Prerequisite
