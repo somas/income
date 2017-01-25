@@ -16,13 +16,14 @@ Application that displays users monthly income and expenses, along with averages
 * Optional - Postman
 
 ### Setup
-1. git clone <repo>
+1. git clone https://github.com/somas/income.git
 2. cd income
 3. ```./gradlew :bootRun```
 
 when app is successfully running, you should see message similar to below
 
-```--- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+```
+   --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
    --- [           main] c.s.i.config.IncomeStatementApplication  : Started IncomeStatementApplication in 2.645 seconds (JVM running for 2.913)
    > Building 80% > :bootRun
 ```
@@ -31,14 +32,14 @@ when app is successfully running, you should see message similar to below
 
 Once App Server is running
 
-####Option 1: Postman REST client
+#### Option 1: Postman REST client
 1. Download postman ```https://www.getpostman.com/```
 2. Open postman app
 3. In the menu bar, click 'Import' button and select 'Choose Files'
 4. cd income/documents and select 'capitalone.postman_collection'
 5. Click on the 'capitalone' collection and select individual request to run.
 
-####Option 2: cURL
+#### Option 2: cURL
 1. Open Terminal (for windows refer: https://help.zendesk.com/hc/en-us/articles/229136847-Installing-and-using-cURL#curl_win)
 2. Paste the following cURL
 - vanilla request
