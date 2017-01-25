@@ -15,20 +15,20 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class IncomeCollector implements Collector<Transaction, Map<LocalDate, IncomeResponse>, Map<LocalDate, IncomeResponse>> {
+public class IncomeCollector implements Collector<Transaction, Map<String, IncomeResponse>, Map<String, IncomeResponse>> {
 
     @Override
-    public Supplier<Map<LocalDate, IncomeResponse>> supplier() {
+    public Supplier<Map<String, IncomeResponse>> supplier() {
         return ConcurrentHashMap::new;
     }
 
     @Override
-    public BiConsumer<Map<LocalDate, IncomeResponse>, Transaction> accumulator() {
+    public BiConsumer<Map<String, IncomeResponse>, Transaction> accumulator() {
         return (map, transaction) -> {
-            IncomeResponse incomeResponse = map.get(transaction.getTransactionTime());
+            IncomeResponse incomeResponse = map.get(transaction.getTransactionTimeAsString());
             if(incomeResponse == null) {
                 incomeResponse = new IncomeResponse();
-                map.put(transaction.getTransactionTime(), incomeResponse);
+                map.put(transaction.getTransactionTimeAsString(), incomeResponse);
 
             }
             if(transaction.getAmount() < 0) {
@@ -40,7 +40,7 @@ public class IncomeCollector implements Collector<Transaction, Map<LocalDate, In
     }
 
     @Override
-    public BinaryOperator<Map<LocalDate, IncomeResponse>> combiner() {
+    public BinaryOperator<Map<String, IncomeResponse>> combiner() {
         return (map1, map2) -> {
             map1.forEach((k, v) -> {
                 IncomeResponse incomeResponse = map2.get(k);
@@ -53,7 +53,7 @@ public class IncomeCollector implements Collector<Transaction, Map<LocalDate, In
     }
 
     @Override
-    public Function<Map<LocalDate, IncomeResponse>, Map<LocalDate, IncomeResponse>> finisher() {
+    public Function<Map<String, IncomeResponse>, Map<String, IncomeResponse>> finisher() {
         return Function.identity();
     }
 

@@ -20,11 +20,11 @@ public class IncomeStatementService {
     @Autowired
     TransactionsApi transactionsApi;
 
-    public Map<LocalDate, IncomeResponse> getIncomeResponse(String apiToken, String token, Integer uid, Collection filterKeys) {
+    public Map<String, IncomeResponse> getIncomeResponse(String apiToken, String token, Integer uid, Collection filterKeys) {
         Args args = Args.builder().apiToken(apiToken)
             .token(token).uid(uid).build();
         Transactions transactions = transactionsApi.getAllTransactions(RequestArgs.builder().args(args).build());
-        Map<LocalDate, IncomeResponse>
+        Map<String, IncomeResponse>
             transactionColl = transactions.getTransactions().stream()
             .filter(t -> filterKeys != null && t.getMerchant()!= null && filterKeys.contains(t.getMerchant())? false: true)
             .collect(new IncomeCollector());

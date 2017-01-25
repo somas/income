@@ -21,7 +21,7 @@ public class IncomeStatementController {
     private IncomeStatementService incomeStatementService;
 
     @RequestMapping(value = "/{uid}/statement", method = RequestMethod.POST)
-    public Map<LocalDate, IncomeResponse> getStatement(@PathVariable String uid, @RequestBody Map<String, String> requestBody) {
+    public Map<String, IncomeResponse> getStatement(@PathVariable String uid, @RequestBody Map<String, String> requestBody) {
         validate(requestBody, uid);
         return incomeStatementService.getIncomeResponse(requestBody.get(API_TOKEN), requestBody.get(TOKEN), Integer.valueOf(uid), null);
     }
