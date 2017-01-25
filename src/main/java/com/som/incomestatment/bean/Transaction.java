@@ -1,5 +1,6 @@
 package com.som.incomestatment.bean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
-    DateTimeFormatter yyyyMMFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+    public static final DateTimeFormatter YYYY_MM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
 
     private Long amount;
     private String transactionId;
@@ -21,6 +22,10 @@ public class Transaction {
     private LocalDateTime transactionTime;
 
     public String getTransactionTimeAsString() {
-        return this.transactionTime.format(yyyyMMFormatter);
+        return this.transactionTime.format(YYYY_MM_FORMATTER);
+    }
+
+    public LocalDate getTransactionTimeAsLocalDate() {
+        return this.transactionTime.toLocalDate();
     }
 }

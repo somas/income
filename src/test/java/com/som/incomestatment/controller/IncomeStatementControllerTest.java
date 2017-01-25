@@ -1,5 +1,6 @@
 package com.som.incomestatment.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.som.incomestatment.bean.IncomeResponse;
+import com.som.incomestatment.bean.TransactionSummary;
 import com.som.incomestatment.service.IncomeStatementService;
 
 public class IncomeStatementControllerTest {
@@ -35,7 +36,7 @@ public class IncomeStatementControllerTest {
         Mockito.when(mockIncomeStatementService.getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection()))
             .thenReturn(Mockito.mock(Map.class));
 
-        Map<String, IncomeResponse> response = incomeStatementController.getStatement("123", requestBody);
+        Map<String, TransactionSummary> response = incomeStatementController.getStatement("123", requestBody);
 
         Assert.assertNotNull(response);
         Mockito.verify(mockIncomeStatementService, Mockito.times(1)).getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection());

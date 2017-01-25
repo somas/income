@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.som.incomestatment.bean.IncomeResponse;
+import com.som.incomestatment.bean.TransactionSummary;
 import com.som.incomestatment.service.IncomeStatementService;
 
 @RestController
@@ -21,7 +21,7 @@ public class IncomeStatementController {
     private IncomeStatementService incomeStatementService;
 
     @RequestMapping(value = "/{uid}/statement", method = RequestMethod.POST)
-    public Map<String, IncomeResponse> getStatement(@PathVariable String uid, @RequestBody Map<String, String> requestBody) {
+    public Map<String, TransactionSummary> getStatement(@PathVariable String uid, @RequestBody Map<String, String> requestBody) {
         validate(requestBody, uid);
         return incomeStatementService.getIncomeResponse(requestBody.get(API_TOKEN), requestBody.get(TOKEN), Integer.valueOf(uid), null);
     }
