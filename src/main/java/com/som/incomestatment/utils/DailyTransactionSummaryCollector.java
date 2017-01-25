@@ -18,6 +18,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 public class DailyTransactionSummaryCollector implements Collector<Transaction, Map<LocalDate, TransactionSummary>, Map<LocalDate, TransactionSummary>> {
+    private boolean isIgnorePayments = false;
+
+    public DailyTransactionSummaryCollector(boolean isIgnorePayments) {
+        this.isIgnorePayments = isIgnorePayments;
+    }
 
     @Override
     public Supplier<Map<LocalDate, TransactionSummary>> supplier() {
@@ -32,7 +37,7 @@ public class DailyTransactionSummaryCollector implements Collector<Transaction, 
                 transactionSummary = new TransactionSummary();
                 map.put(transaction.getTransactionTimeAsLocalDate(), transactionSummary);
             }
-            if(!isPaymentTransaction(map, transaction)) {
+            if(isIgnorePayments || !isPaymentTransaction(map, transaction)) {
                 if(transaction.getAmount() < 0) {
                     transactionSummary.addExpense(transaction.getAmount());
                 } else {

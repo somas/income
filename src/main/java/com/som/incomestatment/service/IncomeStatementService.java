@@ -19,23 +19,23 @@ public class IncomeStatementService {
     @Autowired
     TransactionsApi transactionsApi;
 
-    public Map<String, TransactionSummary> getIncomeResponse(String apiToken, String token, Integer uid, Collection filterKeys) {
+    public Map<String, TransactionSummary> getIncomeResponse(String apiToken, String token, Integer uid, Collection filterKeys, boolean isIgnorePayments) {
         Args args = Args.builder().apiToken(apiToken)
             .token(token).uid(uid).build();
 
         Transactions transactions = transactionsApi.getAllTransactions(RequestArgs.builder().args(args).build());
 
         Map<LocalDate, TransactionSummary> dailyTransactionSummaryMap =
-            getDailyTransactionSummaryMap(filterKeys, transactions);
+            getDailyTransactionSummaryMap(filterKeys, transactions, isIgnorePayments);
 
         return getMonthlyTransactionSummary(dailyTransactionSummaryMap);
     }
 
     protected Map<LocalDate, TransactionSummary> getDailyTransactionSummaryMap(Collection filterKeys,
-        Transactions transactions) {
+        Transactions transactions, boolean isIgnorePayments) {
         return transactions.getTransactions().stream()
             .filter(t -> filterKeys != null && t.getMerchant()!= null && filterKeys.contains(t.getMerchant())? false: true)
-            .collect(new DailyTransactionSummaryCollector());
+            .collect(new DailyTransactionSummaryCollector(isIgnorePayments));
     }
 
     protected Map<String, TransactionSummary> getMonthlyTransactionSummary(Map<LocalDate, TransactionSummary> dailyTransactionSummaryMap) {

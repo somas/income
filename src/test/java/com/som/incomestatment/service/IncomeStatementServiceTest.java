@@ -38,7 +38,7 @@ public class IncomeStatementServiceTest {
         Transactions transactions = buildTransactions(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
-            .getDailyTransactionSummaryMap(null, transactions);
+            .getDailyTransactionSummaryMap(null, transactions, true);
 
         Assert.assertEquals(BigDecimal.valueOf(-2550).movePointLeft(2),  balanceSheet.get(lastMonth.toLocalDate()).getExpense());
         Assert.assertEquals(BigDecimal.valueOf(1000).movePointLeft(2),  balanceSheet.get(lastMonth.toLocalDate()).getIncome());
@@ -53,7 +53,7 @@ public class IncomeStatementServiceTest {
         Transactions transactions = buildTransactions(lastMonth, currentMonth, "Krispy Kreme Donuts");
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
-            .getDailyTransactionSummaryMap(Arrays.asList("Krispy Kreme Donuts"), transactions);
+            .getDailyTransactionSummaryMap(Arrays.asList("Krispy Kreme Donuts"), transactions, true);
 
         Assert.assertEquals(BigDecimal.valueOf(-2050).movePointLeft(2),  balanceSheet.get(lastMonth.toLocalDate()).getExpense());
         Assert.assertEquals(BigDecimal.valueOf(1000).movePointLeft(2),  balanceSheet.get(lastMonth.toLocalDate()).getIncome());
@@ -68,7 +68,22 @@ public class IncomeStatementServiceTest {
         Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
 
         Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
-            .getDailyTransactionSummaryMap(null, transactions);
+            .getDailyTransactionSummaryMap(null, transactions, false);
+
+        Assert.assertEquals(BigDecimal.valueOf(-500).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getExpense());
+        Assert.assertEquals(BigDecimal.valueOf(1000).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getIncome());
+
+        Assert.assertEquals(BigDecimal.valueOf(0).movePointLeft(2), balanceSheet.get(currentMonth.toLocalDate()).getExpense());
+        Assert.assertEquals(BigDecimal.valueOf(2100).movePointLeft(2), balanceSheet.get(currentMonth.toLocalDate()).getIncome());
+    }
+
+    @Test public void getDailyTransactionSummaryMap_withPaymentSwitch() throws Exception {
+        LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
+        LocalDateTime currentMonth = LocalDateTime.now();
+        Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
+
+        Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService
+            .getDailyTransactionSummaryMap(null, transactions, true);
 
         Assert.assertEquals(BigDecimal.valueOf(-500).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getExpense());
         Assert.assertEquals(BigDecimal.valueOf(1000).movePointLeft(2), balanceSheet.get(lastMonth.toLocalDate()).getIncome());
@@ -121,7 +136,7 @@ public class IncomeStatementServiceTest {
         LocalDateTime currentMonth = LocalDateTime.now();
         Transactions transactions = buildTransactionsWithPayments(lastMonth, currentMonth, null);
 
-        Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService.getDailyTransactionSummaryMap(null, transactions);
+        Map<LocalDate, TransactionSummary> balanceSheet = incomeStatementService.getDailyTransactionSummaryMap(null, transactions, false);
 
         Map<String, TransactionSummary> monthlyTransactionSummary = incomeStatementService.getMonthlyTransactionSummary(balanceSheet);
 

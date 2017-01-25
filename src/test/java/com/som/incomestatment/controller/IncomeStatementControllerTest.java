@@ -33,13 +33,13 @@ public class IncomeStatementControllerTest {
         requestBody.put(IncomeStatementController.TOKEN, "12345");
         requestBody.put(IncomeStatementController.API_TOKEN, "ABCDE");
 
-        Mockito.when(mockIncomeStatementService.getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection()))
+        Mockito.when(mockIncomeStatementService.getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection(), Mockito.anyBoolean()))
             .thenReturn(Mockito.mock(Map.class));
 
         Map<String, TransactionSummary> response = incomeStatementController.getStatement("123", requestBody);
 
         Assert.assertNotNull(response);
-        Mockito.verify(mockIncomeStatementService, Mockito.times(1)).getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection());
+        Mockito.verify(mockIncomeStatementService, Mockito.times(1)).getIncomeResponse(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyCollection(), Mockito.anyBoolean());
     }
 
     @Test(expected = RuntimeException.class) public void getStatement_badUid() throws Exception {
