@@ -1,8 +1,8 @@
 package com.som.incomestatment.bean;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class Transactions {

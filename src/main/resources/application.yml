@@ -12,3 +12,8 @@ logging:
 
 capitalone:
   url: https://2016.api.levelmoney.com/api/v2/core/
+
+filter:
+  transaction:
+    ignore-donuts: Krispy Kreme Donuts,DUNKIN ##336784
+

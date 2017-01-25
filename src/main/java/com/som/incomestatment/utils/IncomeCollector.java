@@ -44,8 +44,8 @@ public class IncomeCollector implements Collector<Transaction, Map<LocalDate, In
         return (map1, map2) -> {
             map1.forEach((k, v) -> {
                 IncomeResponse incomeResponse = map2.get(k);
-                incomeResponse.addExpense(v.getExpense());
-                incomeResponse.addIncome(v.getIncome());
+                incomeResponse.getExpense().add(v.getExpense());
+                incomeResponse.getIncome().add(v.getIncome());
             }
             );
             return map2;

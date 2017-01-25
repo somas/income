@@ -4,5 +4,13 @@ feign:
 
 logging:
   level:
-    com.som.incomestatement.client: DEBUG
+    com.som.incomestatment.client: DEBUG
     org.springframework.cloud.netflix.feign.valid: DEBUG
+    com.github.tomakehurst.wiremock: TRACE
+
+capitalone:
+  url: localhost:9998
+
+filter:
+  transaction:
+    ignore-donuts: "Krispy Kreme Donuts, DUNKIN #336784"
